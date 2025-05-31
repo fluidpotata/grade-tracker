@@ -1,19 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CGPA Calculator</title>
-  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>CGPA Calculator</h1>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-  <div id="sections"></div>
+  <!-- Top Bar -->
+  <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-md">
+    <h1 class="text-2xl font-bold">CGPA Calculator</h1>
+    <button id="toggleDark" class="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+      Toggle Dark Mode
+    </button>
+  </div>
 
-  <div class="summary">
-    <p>Total Credits Done: <span id="totalCredits">0</span></p>
-    <p>Total Courses Done: <span id="totalCourses">0</span></p>
-    <p>CGPA: <span id="cgpa">0.00</span></p>
+  <!-- CGPA Summary Panel -->
+  <div class="max-w-4xl mx-auto mt-6 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+    <h2 class="text-xl font-semibold mb-4">Summary</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+      <div>
+        <p class="text-sm">Total Credits Done</p>
+        <p id="totalCredits" class="text-2xl font-bold">0</p>
+      </div>
+      <div>
+        <p class="text-sm">Total Courses Done</p>
+        <p id="totalCourses" class="text-2xl font-bold">0</p>
+      </div>
+      <div>
+        <p class="text-sm">CGPA</p>
+        <p id="cgpa" class="text-2xl font-bold">0.00</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sections Container -->
+  <div id="sections" class="max-w-4xl mx-auto mt-8 space-y-4 px-4">
+    <!-- Sections will be added here dynamically -->
   </div>
 
   <script src="script.js"></script>

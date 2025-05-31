@@ -45,40 +45,72 @@ const sections = [
   }
 ];
 
+
+const html = document.documentElement;
+
+document.getElementById('toggleDark').addEventListener('click', () => {
+  html.classList.toggle('dark');
+  localStorage.setItem('darkMode', html.classList.contains('dark'));
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const isDark = localStorage.getItem('darkMode') === 'true';
+  if (isDark) html.classList.add('dark');
+});
+
+
+
 function renderGradeDropdown(courseIndex, sectionIndex, selectedGrade) {
   let options = Object.keys(gradeToGP).map(grade => {
     return `<option value="${grade}" ${grade === selectedGrade ? 'selected' : ''}>${grade}</option>`;
   }).join("");
-  return `<select onchange="updateGrade(${sectionIndex}, ${courseIndex}, this.value)">${options}</select>`;
+
+  return `<select class="bg-gray-100 dark:bg-gray-700 border dark:border-gray-600 rounded p-1" onchange="updateGrade(${sectionIndex}, ${courseIndex}, this.value)">${options}</select>`;
 }
+
+
 
 function renderTable(section, sectionIndex) {
   let html = `
-    <h2>${section.title}</h2>
-    <table>
-      <tr>
-        <th>Course Code</th>
-        <th>Course Name</th>
-        <th>Credit</th>
-        <th>Grade</th>
-        <th>GP</th>
-      </tr>
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">${section.title}</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded">
+          <thead>
+            <tr class="bg-gray-200 dark:bg-gray-700 text-left">
+              <th class="p-2">Course Code</th>
+              <th class="p-2">Course Name</th>
+              <th class="p-2">Credit</th>
+              <th class="p-2">Grade</th>
+              <th class="p-2">GP</th>
+            </tr>
+          </thead>
+          <tbody>
   `;
+
   section.courses.forEach((course, courseIndex) => {
     const gp = gradeToGP[course.grade];
     html += `
-      <tr>
-        <td>${course.code}</td>
-        <td>${course.name}</td>
-        <td>${course.credit}</td>
-        <td>${renderGradeDropdown(courseIndex, sectionIndex, course.grade)}</td>
-        <td class="gp-cell" id="gp-${sectionIndex}-${courseIndex}">${gp}</td>
+      <tr class="border-t border-gray-200 dark:border-gray-600">
+        <td class="p-2">${course.code}</td>
+        <td class="p-2">${course.name}</td>
+        <td class="p-2">${course.credit}</td>
+        <td class="p-2">${renderGradeDropdown(courseIndex, sectionIndex, course.grade)}</td>
+        <td class="p-2 gp-cell" id="gp-${sectionIndex}-${courseIndex}">${gp}</td>
       </tr>
     `;
   });
-  html += `</table>`;
+
+  html += `
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
   return html;
 }
+
 
 function updateGrade(sectionIndex, courseIndex, newGrade) {
   const course = sections[sectionIndex].courses[courseIndex];
