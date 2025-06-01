@@ -45,10 +45,15 @@ async function processPDF() {
         const result = await response.json();
 
         if (response.ok) {
-            output.textContent += `\n\nServer response: ${result.received_text.substring(0, 100)}...`;
+            if (result.redirect) {
+                window.location.href = result.redirect;
+            } else {
+                output.textContent += "\n\nServer response received!";
+            }
         } else {
             output.textContent += `\n\nServer error: ${result.error}`;
         }
+
     } catch (error) {
         output.textContent = `Error: ${error.message}`;
     }

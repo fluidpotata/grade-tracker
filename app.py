@@ -1,7 +1,9 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, session, url_for
 from data import cse
+from transcript import parse_transcript_to_courses
 
 app = Flask(__name__)
+app.secret_key = 'this-is-fluidpotata'  # Set a strong, unique secret key
 
 @app.route("/")
 def index():
@@ -12,40 +14,26 @@ def index():
 def upload():
     return render_template("upload.html")
 
-@app.route('/receive_text', methods=['POST'])
+
+
+@app.route('/receive_text', methods=['GET','POST'])
 def receive_text():
     data = request.get_json()
     if not data or 'text' not in data:
         return jsonify({'error': 'No text provided'}), 400
-    # print(data['text'].split(" "))
-    transcript = data['text']
-    semesters = []
-    current_semester = None
-    lines = transcript.strip().split('\n')
-    
-    for line in lines:
-        line = line.strip()
-        # Check for semester header
-        if line.startswith('SEMESTER:'):
-            semester_name = line.split('SEMESTER:')[1].strip()
-            current_semester = {'semester': semester_name, 'courses': []}
-            semesters.append(current_semester)
-        # Check for course lines (based on pattern: Course No, Course Title, Credits Earned, Grade, Grade Points)
-        elif line.startswith('CSE') or line.startswith('ENG') or line.startswith('MAT') or line.startswith('PHY') or line.startswith('STA') or line.startswith('BNG') or line.startswith('EMB') or line.startswith('HUM') or line.startswith('CHE') or line.startswith('ECO'):
-            parts = line.split('   ')
-            parts = [part.strip() for part in parts if part.strip()]
-            if len(parts) >= 4:  # Ensure it's a course line
-                course_no = parts[0]
-                course_title = parts[1]
-                grade = parts[3]
-                current_semester['courses'].append({
-                    'course_no': course_no,
-                    'course_title': course_title,
-                    'grade': grade
-                })
+    print(data['text'])
     print("======")
-    print(semesters)
-    return jsonify({'received_text': data['text']})
+    transcript = data['text']
+    courses_data = parse_transcript_to_courses(transcript)
+    print(courses_data)
+    session['courses_data'] = courses_data
+    return jsonify({'redirect': url_for('view_courses')})
+
+@app.route('/view_courses')
+def view_courses():
+    courses_data = session.get('courses_data', [])
+    return render_template('generic.html', courses=courses_data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
