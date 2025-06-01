@@ -70,7 +70,9 @@ function updateGrade(sectionIndex, subIndex, courseIndex, newGrade) {
   const newGP = gradeToGP[newGrade];
   document.getElementById(`gp-${sectionIndex}-${subIndex}-${courseIndex}`).innerText = newGP;
   calculateSummary();
+  saveToLocalStorage();
 }
+
 
 function calculateSummary() {
   let totalCredits = 0;
@@ -103,7 +105,10 @@ function toggleDarkMode() {
   root.classList.toggle("dark");
 }
 
-// DOM ready
+function saveToLocalStorage() {
+  localStorage.setItem("sectionsData", JSON.stringify(sectionsData));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("darkToggle").addEventListener("click", toggleDarkMode);
   loadData();
