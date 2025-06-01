@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CGPA Calculator</title>
-  <script>
-    const sectionsData = JSON.parse(localStorage.getItem("sectionsData")) || {{ sections|tojson }};
-  </script>  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class'
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | CGPA Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class'
+      }
+    </script>
 </head>
-<body class="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-500">
-  <div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold">CGPA Calculator</h1>
-      <button id="darkToggle" class="px-4 py-2 bg-gray-800 text-white rounded dark:bg-white dark:text-black">
-      </button>
-    </div>    <div class="max-w-6xl mx-auto mt-6 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-      <h2 class="text-xl font-semibold mb-4">Summary</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-        <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-          <p class="text-sm text-blue-700 dark:text-blue-300">Total Credits Done</p>
-          <p id="totalCredits" class="text-2xl font-bold">0</p>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors duration-500">
+    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center dark:bg-gray-800 dark:text-white transition-colors duration-500">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">Welcome to the CGPA Calculator!</h1>
+            <button id="darkToggle" class="ml-4 px-3 py-2 bg-gray-800 text-white rounded dark:bg-white dark:text-black transition-colors" title="Toggle dark mode">
+                <span id="darkIcon">🌙</span>
+            </button>
         </div>
-        <div class="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-          <p class="text-sm text-purple-700 dark:text-purple-300">Total Courses Done</p>
-          <p id="totalCourses" class="text-2xl font-bold">0</p>
+        <p class="mb-6 text-gray-700 dark:text-gray-200">Easily calculate your CGPA by uploading your gradesheet or manually entering your courses.</p>
+        <div class="flex flex-col gap-4">
+            <a href="/upload" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Upload Gradesheet</a>
+            <a href="/view_courses" class="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">Manually Build Courses</a>
         </div>
-        <div class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20">
-          <p class="text-sm text-green-700 dark:text-green-300">CGPA</p>
-          <p id="cgpa" class="text-2xl font-bold">0.00</p>
-        </div>
-      </div>
     </div>
-
-    <div id="sections" class="max-w-6xl mx-auto mt-8 space-y-8 px-4"></div>
-  </div>
+    <script>
+        const darkToggle = document.getElementById('darkToggle');
+        const darkIcon = document.getElementById('darkIcon');
+        function setDarkMode(enabled) {
+            if (enabled) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                darkIcon.textContent = '☀️';
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                darkIcon.textContent = '🌙';
+            }
+        }
+        // Initial mode
+        setDarkMode(localStorage.getItem('theme') === 'dark');
+        darkToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            setDarkMode(!isDark);
+        });
+    </script>
 </body>
 </html>
