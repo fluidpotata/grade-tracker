@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CGPA Calculator</title>
+  <script>
+    const sectionsData = {{ sections|tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+</head>
+<body class="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-500">
+  <div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">CGPA Calculator</h1>
+      <button id="darkToggle" class="px-4 py-2 bg-gray-800 text-white rounded dark:bg-white dark:text-black">
+        Toggle Dark Mode
+      </button>
+    </div>
+
+    <div class="max-w-6xl mx-auto mt-6 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+      <h2 class="text-xl font-semibold mb-4">Summary</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+        <div>
+          <p class="text-sm">Total Credits Done</p>
+          <p id="totalCredits" class="text-2xl font-bold">0</p>
+        </div>
+        <div>
+          <p class="text-sm">Total Courses Done</p>
+          <p id="totalCourses" class="text-2xl font-bold">0</p>
+        </div>
+        <div>
+          <p class="text-sm">CGPA</p>
+          <p id="cgpa" class="text-2xl font-bold">0.00</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="sections" class="max-w-6xl mx-auto mt-8 space-y-8 px-4"></div>
+  </div>
+</body>
+</html>
