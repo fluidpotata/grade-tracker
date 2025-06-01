@@ -8,7 +8,8 @@ const gradeToGP = {
   "C+": 2.3,
   "C": 2.0,
   "D": 1.0,
-  "F": 0.0
+  "F": 0.0,
+  "I": null // Incomplete, not counted in CGPA
 };
 
 function renderGradeDropdown(sectionIndex, subIndex, courseIndex, selectedGrade) {
@@ -87,8 +88,10 @@ function calculateSummary() {
     section.subsections.forEach(sub => {
       sub.courses.forEach(course => {
         const gp = gradeToGP[course.grade];
-        totalCredits += course.credit;
-        totalPoints += course.credit * gp;
+        if (gp !== null && gp !== undefined) { // Exclude 'I' grades
+          totalCredits += course.credit;
+          totalPoints += course.credit * gp;
+        }
         totalCourses++;
       });
     });
@@ -96,7 +99,7 @@ function calculateSummary() {
 
   document.getElementById("totalCredits").innerText = totalCredits;
   document.getElementById("totalCourses").innerText = totalCourses;
-  document.getElementById("cgpa").innerText = (totalPoints / totalCredits).toFixed(2);
+  document.getElementById("cgpa").innerText = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "-";
 }
 
 function loadData() {

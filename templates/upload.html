@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Text Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #output { white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Upload PDF to Extract Text</h1>
+    <input type="file" id="pdfFile" accept=".pdf">
+    <button onclick="processPDF()">Process</button>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module"></script>
+    <script src="{{ url_for('static', filename='upload.js') }}" type="module"></script>
+</body>
+</html>
