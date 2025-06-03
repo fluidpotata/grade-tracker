@@ -4,17 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF to Text Converter</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #output { white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class' };
+    </script>
 </head>
-<body>
-    <h1>Upload PDF to Extract Text</h1>
-    <input type="file" id="pdfFile" accept=".pdf">
-    <button onclick="processPDF()">Process</button>
-    <pre id="output"></pre>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors duration-500">
+    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center dark:bg-gray-800 dark:text-white transition-colors duration-500">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">Upload PDF from Connect</h1>
+            <button id="darkToggle" class="ml-4 px-3 py-2 bg-gray-800 text-white rounded dark:bg-white dark:text-black transition-colors" title="Toggle dark mode">
+                <span id="darkIcon">🌙</span>
+            </button>
+        </div>
+        <input type="file" id="pdfFile" accept=".pdf" class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4" />
+        <button class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition mb-4" onclick="processPDF()" id="processBtn">Process</button>
+        <div class="mb-4 p-3 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded dark:bg-yellow-900/30 dark:text-yellow-200 dark:border-yellow-800">
+            <p class="text-sm">If you have <strong>privacy concerns</strong> you can <a href="https://github.com/fluidpotata/grade-tracker" class="underline hover:text-yellow-600 dark:hover:text-yellow-300" target="_blank">clone this repository</a> from GitHub and run it locally.</p>
+        </div>
+        <pre id="output"></pre>
+
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module"></script>
     <script src="{{ url_for('static', filename='upload.js') }}" type="module"></script>
+    <script>
+        const darkToggle = document.getElementById('darkToggle');
+        const darkIcon = document.getElementById('darkIcon');
+        function setDarkMode(enabled) {
+            if (enabled) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                darkIcon.textContent = '☀️';
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                darkIcon.textContent = '🌙';
+            }
+        }
+        setDarkMode(localStorage.getItem('theme') === 'dark');
+        darkToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            setDarkMode(!isDark);
+        });
+    </script>
 </body>
 </html>

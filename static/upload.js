@@ -64,4 +64,4 @@ document.getElementById('pdfFile').addEventListener('change', () => {
 });
 
 
-document.querySelector('button').onclick = processPDF;
+document.getElementById('processBtn').onclick = processPDF;

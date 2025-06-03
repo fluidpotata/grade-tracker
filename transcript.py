@@ -12,7 +12,7 @@ def parse_transcript_to_courses(transcript):
     i = 0
     while i < len(parts):
         # Check if the current part is a course prefix
-        if parts[i].startswith(('CSE', 'ENG', 'MAT', 'PHY', 'STA', 'BNG', 'EMB', 'HUM', 'CHE', 'ECO', 'SOC', 'ANT', 'BIO')):
+        if parts[i].startswith(('CSE', 'ENG', 'MAT', 'PHY', 'STA', 'BNG', 'EMB', 'HUM', 'CHE', 'ECO', 'SOC', 'ANT', 'BIO', 'CHN', "FRN", "BUS")):
             # Debug: Print the potential course being processed
             print(f"Processing course at index {i}: {parts[i:i+6]}")
             # Ensure there are enough parts for at least a course entry
@@ -39,7 +39,7 @@ def parse_transcript_to_courses(transcript):
                             if len(split_parts) == 2:
                                 grade_points, next_part = split_parts
                                 parts[title_index + 2] = grade_points  # Update current part
-                                if next_part and any(next_part.startswith(prefix) for prefix in ('CSE', 'ENG', 'MAT', 'PHY', 'STA', 'BNG', 'EMB', 'HUM', 'CHE', 'ECO', 'SOC', 'ANT', 'BIO')):
+                                if next_part and any(next_part.startswith(prefix) for prefix in ('CSE', 'ENG', 'MAT', 'PHY', 'STA', 'CHN', "FRN" 'BNG', 'EMB', 'HUM', 'CHE', 'ECO', 'SOC', 'ANT', 'BIO', 'BUS')):
                                     parts.insert(title_index + 3, next_part)  # Reinsert course code
                                     i = title_index + 2  # Move to reinserted course code
                                 else:
