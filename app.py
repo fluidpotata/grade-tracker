@@ -3,7 +3,7 @@ from data import cse
 from transcript import parse_transcript_to_courses
 
 app = Flask(__name__)
-app.secret_key = 'this-is-fluidpotata'  # Set a strong, unique secret key
+app.secret_key = 'random-key-for-local-session'
 
 @app.route("/")
 def index():
