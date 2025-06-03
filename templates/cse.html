@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CGPA Calculator</title>
   <script>
-    const sectionsData = JSON.parse(localStorage.getItem("sectionsData")) || {{ sections|tojson }};
-  </script>  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    var sectionsData = JSON.parse(localStorage.getItem("sectionsData")) || {{ sections|tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -35,6 +36,10 @@
           <p class="text-sm text-green-700 dark:text-green-300">CGPA</p>
           <p id="cgpa" class="text-2xl font-bold">0.00</p>
         </div>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button id="saveBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition hidden">Save</button>
+        <span id="saveStatus" class="ml-3 text-green-600 text-sm hidden">Saved!</span>
       </div>
     </div>
 

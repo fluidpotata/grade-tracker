@@ -142,6 +142,11 @@ function calculateSummary() {
 }
 
 function loadData() {
+  const saved = localStorage.getItem("sectionsData");
+  if (saved) {
+    sectionsData = JSON.parse(saved);
+  }
+  // If not saved, use the global sectionsData injected by Flask
   renderTable(sectionsData);
   calculateSummary();
 }
@@ -189,6 +194,10 @@ function addClearAllButton() {
   }
 }
 
+function saveToLocalStorage() {
+  localStorage.setItem("sectionsData", JSON.stringify(sectionsData));
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const savedDark = localStorage.getItem("darkMode");
@@ -197,4 +206,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("darkToggle").addEventListener("click", toggleDarkMode);
   loadData();
   addClearAllButton();
-});;
+
+  const saveBtn = document.getElementById("saveBtn");
+  const saveStatus = document.getElementById("saveStatus");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      saveToLocalStorage();
+      if (saveStatus) {
+        saveStatus.classList.remove("hidden");
+        setTimeout(() => saveStatus.classList.add("hidden"), 1200);
+      }
+    });
+  }
+});
