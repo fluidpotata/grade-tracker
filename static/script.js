@@ -45,11 +45,13 @@ function renderTable(sections) {
             </thead>
             <tbody>
       `;
+
       sub.courses.forEach((course, courseIndex) => {
         const gp = gradeToGP[course.grade];
         const rowBgClass = courseIndex % 2 === 0 
           ? "bg-gray-50 dark:bg-gray-800" 
           : "bg-white dark:bg-gray-900";
+
         sectionHtml += `
               <tr class="${rowBgClass} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <td class="border border-gray-300 dark:border-gray-600 px-2 py-1">${course.code}</td>
@@ -62,6 +64,20 @@ function renderTable(sections) {
       });
 
       sectionHtml += `</tbody></table></div>`;
+
+      if (sub.available && sub.available.length > 0) {
+        const dropdownId = `add-select-${sectionIndex}-${subIndex}`;
+        sectionHtml += `
+          <div class="flex gap-2 items-center mb-4">
+            <select id="${dropdownId}" class="px-2 py-1 border rounded dark:bg-gray-800 dark:text-white">
+              ${sub.available.map(course => `<option value="${course.code}">${course.code} - ${course.name}</option>`).join("")}
+            </select>
+            <button onclick="addCourse(${sectionIndex}, ${subIndex}, '${dropdownId}')" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+              Add Course
+            </button>
+          </div>
+        `;
+      }
     });
 
     sectionHtml += `</div>`;
@@ -69,11 +85,34 @@ function renderTable(sections) {
   });
 }
 
+
 function updateGrade(sectionIndex, subIndex, courseIndex, newGrade) {
   const course = sectionsData[sectionIndex].subsections[subIndex].courses[courseIndex];
   course.grade = newGrade;
   const newGP = gradeToGP[newGrade];
   document.getElementById(`gp-${sectionIndex}-${subIndex}-${courseIndex}`).innerText = newGP;
+  calculateSummary();
+  saveToLocalStorage();
+}
+
+
+function addCourse(sectionIndex, subIndex, dropdownId) {
+  const selectEl = document.getElementById(dropdownId);
+  const selectedCode = selectEl.value;
+
+  const sub = sectionsData[sectionIndex].subsections[subIndex];
+  const selectedCourse = sub.available.find(c => c.code === selectedCode);
+
+  if (!selectedCourse) return;
+
+  sub.courses.push({
+    ...selectedCourse,
+    grade: "A"
+  });
+
+  sub.available = sub.available.filter(c => c.code !== selectedCode);
+
+  renderTable(sectionsData);
   calculateSummary();
   saveToLocalStorage();
 }
@@ -88,7 +127,7 @@ function calculateSummary() {
     section.subsections.forEach(sub => {
       sub.courses.forEach(course => {
         const gp = gradeToGP[course.grade];
-        if (gp !== null && gp !== undefined) { // Exclude 'I' grades
+        if (gp !== null && gp !== undefined) {
           totalCredits += course.credit;
           totalPoints += course.credit * gp;
         }
@@ -131,7 +170,25 @@ function toggleDarkMode() {
   setDarkMode(isDark);
 }
 
-// On DOMContentLoaded, set dark mode from localStorage and update button
+function addClearAllButton() {
+  const container = document.querySelector('.max-w-6xl.mx-auto.mt-6.p-6');
+  if (!container) return;
+  let clearBtn = document.getElementById('clearAllBtn');
+  if (!clearBtn) {
+    clearBtn = document.createElement('button');
+    clearBtn.id = 'clearAllBtn';
+    clearBtn.className = 'mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition';
+    clearBtn.textContent = 'Clear All Data';
+    clearBtn.onclick = function() {
+      if (confirm('Are you sure you want to clear all data?')) {
+        localStorage.removeItem('sectionsData');
+        location.reload();
+      }
+    };
+    container.appendChild(clearBtn);
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const savedDark = localStorage.getItem("darkMode");
@@ -139,4 +196,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setDarkMode(savedDark === "true" || (savedDark === null && prefersDark));
   document.getElementById("darkToggle").addEventListener("click", toggleDarkMode);
   loadData();
-});
+  addClearAllButton();
+});;

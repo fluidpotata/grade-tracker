@@ -35,5 +35,10 @@ def view_courses():
     return render_template('generic.html', courses=courses_data)
 
 
+@app.route('/cse-validator')
+def cse_validator():
+    sections = cse
+    return render_template("cse.html", sections=sections)
+
 if __name__ == "__main__":
     app.run(debug=True)
